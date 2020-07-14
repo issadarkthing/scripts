@@ -1,0 +1,27 @@
+#!/usr/bin/python3
+import hashlib
+import sys
+import requests
+import getpass
+
+passw = getpass.getpass('Password: ')
+hashed_passw = hashlib.sha1(passw.encode()).hexdigest().upper()
+
+response = requests.get("https://api.pwnedpasswords.com/range/" + hashed_passw[:5])
+
+list_passw = response.content.decode("utf-8").splitlines()
+founded = False
+
+for i in list_passw:
+
+    hashed_passw_respond, occurences = tuple(i.split(":"))
+
+
+    if hashed_passw_respond == hashed_passw[5:]:
+        print(f"password has been found {occurences} time(s)")
+        founded = True
+        break
+
+
+if not founded:
+    print("password has not been found yet")

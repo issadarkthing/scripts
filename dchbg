@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# randomly choose image from a directory
+IMG=$(realpath `find /home/terra/Pictures/abandoned -maxdepth 1` | shuf -n 1)
+
+
+feh --bg-scale "$IMG"

@@ -1,0 +1,41 @@
+#!/bin/bash
+
+# default variables
+zadir=~/.local/share/zaread/
+reader="zathura"
+
+
+# if ~/.zaread doesn't exist, we create it.
+if [[ ! -d "$zadir" ]]; then
+  mkdir "$zadir"
+  mkdir "$zadir"cksum
+fi
+
+# if no arguments exit.
+if [[ -z $@ ]]; then exit 1; fi
+
+
+for i in "$@"; do
+
+	file=$(basename "$i")
+
+	# if file type is pdf, then just read the file
+	if [[ `file --mime-type "$file" | awk -F':' '{print $2}'` =~ pdf$  ]]; then
+	  echo "The file is already in PDF format."
+	  $reader --fork "$file"
+	# else check if you already have its pdf version (if not, create it)
+	else
+	  pdffile=${file%.*}".pdf"
+	  check=`cksum "$file" | awk '{print $1}'`
+	  # if pdf version hasn't ever been created, or it changed, then
+	  # make conversion and store the checksum.
+	  if [[ ( ! -f "$zadir$pdffile" ) || ( ! "$check" == `cat "$zadir"cksum/"$file".check` ) ]]; then
+
+		libreoffice --convert-to pdf "$file" --headless --outdir "$zadir"
+
+		echo "$check" > "$zadir"cksum/"$file".check
+	  fi
+	  $reader --fork "$zadir$pdffile"
+	fi
+done
+

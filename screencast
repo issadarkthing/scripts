@@ -1,0 +1,5 @@
+#!/bin/bash
+
+[[ -z $1 ]] && echo "please specify output file 'name.mkv'" && exit 1
+
+ffmpeg -y -f x11grab -s 1920x1080 -i $DISPLAY `pwd`/"$1"

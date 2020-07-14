@@ -1,0 +1,145 @@
+#!/usr/bin/python3
+import argparse
+from itertools import cycle, chain
+import string
+import getpass
+import pyperclip
+
+#types of passwords
+upper = list( string.ascii_uppercase )
+lower = list( string.ascii_lowercase )
+symbols = list(filter(lambda x: x not in string.whitespace, string.printable))[62:]
+numbers = list( string.digits )
+
+def passwd_combination(options):
+    result = []
+
+    if 'a' in options:
+        result += lower
+
+    if 'A' in options:
+        result += upper
+
+    if 's' in options:
+        result += symbols
+
+    if 'd' in options:
+        result += numbers
+
+    return result
+
+
+#returns generator
+def str_to_bin(st):
+    temp = []
+    strbin = map(bin,bytearray(st,'utf8'))
+
+    for i in strbin:
+        temp.append(i[2:])
+
+    temp = ''.join(temp)
+
+    return cycle(temp)
+
+
+
+def _scramble(key_bin, chars):
+
+    temp = []
+    unscrambled = chars
+    scrambled = []
+
+    while len(scrambled) < len(chars):
+
+        for i in unscrambled:
+            if next(key_bin) == '1':
+                scrambled.append(i)
+            else:
+                temp.append(i)
+
+        unscrambled, temp = temp, []
+
+
+    return scrambled
+
+
+
+def scramble(key_bin, chars, _cycle):
+
+    result = []
+    while _cycle > 0:
+        result = _scramble(key_bin, chars)
+        _cycle -= 1
+
+    return result
+
+
+
+
+def to_ascii(string):
+    return [ord(c) for c in string]
+
+
+
+
+def pick(key, chars, length):
+
+    key = sum(to_ascii(key))
+    result = []
+
+    while len(result) != length:
+
+        index = int( key % len(chars) )
+        selected = chars[index]
+
+        if result.count(selected) < 3:
+            result.append(selected)
+
+        key = length + index
+
+
+    return result
+
+
+
+
+def gen_passwd(key, passwd, _cycle, length, _chars):
+
+    bin_key = str_to_bin(key)
+    scrambled = scramble(bin_key, _chars, _cycle)
+    result = pick(passwd, scrambled, length)
+    result.reverse()
+    return ''.join(result)
+
+
+
+
+
+parser = argparse.ArgumentParser(
+    prog="arma",
+    description='Creates unique password for every website')
+
+password_type =  '''
+a - lowercase letters
+A - uppercase letters
+d - digits
+s - symbols
+
+by default it uses aAds (includes all)
+'''
+
+parser.add_argument('website', help='website name')
+parser.add_argument('username', help='username for the website')
+parser.add_argument('-l', '--length', default=20, type=int,
+                    help='password length (default = 20)')
+parser.add_argument('-r', '--round', default=23, type=int, help='password cycle round')
+parser.add_argument('-t', '--type', default='aAsd', type=str, help=password_type)
+
+args = parser.parse_args()
+pw = getpass.getpass()
+
+combination = passwd_combination(args.type)
+passwd = gen_passwd(args.username + args.website, pw, args.round,
+                    args.length, combination)
+
+pyperclip.copy(passwd)
