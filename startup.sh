@@ -19,6 +19,14 @@ if [ ! -f /tmp/autostart ]; then
 	alacritty --class Alacritty &
 	echo alacritty >> /tmp/autostart
 
+	# conky
+	conky -d &> /tmp/conky.log
+	echo conky >> /tmp/autostart
+
+	# skippy-xd
+	skippy-xd --start-daemon &
+	echo skippy-xd >> /tmp/autostart
+
 	# handle unstable connection
 	#~/Documents/scripts/reload.sh & 2>&1 /dev/null
 

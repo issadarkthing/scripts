@@ -57,7 +57,7 @@ xrandr --output "$MON" --brightness "$CurrBright"   # Set new brightness
 # Display current brightness
 finalBrightness=$(getBrightness)
 if (( $(echo "$initialBrightness != $finalBrightness" | bc -l) )); then
-	trigger $finalBrightness
+	trigger "$finalBrightness"
 
 	# update polybar screen-brightness module
 	polybar-msg hook screen-brightness 1
@@ -65,4 +65,4 @@ fi
 
 ROUNDED=$(python3 -c "print(int($finalBrightness * 100))")
 BRIGHT=$(getprogstr 20 "-" "-" "$ROUNDED" "/")
-echo $ROUNDED $BRIGHT
+echo "$ROUNDED" "$BRIGHT"

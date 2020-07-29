@@ -98,6 +98,8 @@ run() {
 			[[ $EVENT == 'node_swap' ]] || [[ $EVENT == 'node_transfer' ]] || 
 			[[ $EVENT == 'node_focus' ]]; then
 
+			echo "it triggered" >> /tmp/wswr.log
+
 
 			# check the amount of node in current workspace
 			COUNT=$(bspc query -N -n '.window.!hidden' -d focused | wc -l)

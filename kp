@@ -6,10 +6,16 @@
 # press [enter] to kill selected processes and go back to the process list.
 # or press [escape] to go back to the process list. Press [escape] twice to exit completely.
 
-pid=$(ps -ef | sed 1d | eval "fzf ${FZF_DEFAULT_OPTS} -m --header='[kill:process]'" | awk '{print $2}')
+# default to sigterm -15
+SIGCODE=-${1:-15}
+
+pid=$(ps -ef \
+	| sed 1d \
+	| eval "fzf ${FZF_DEFAULT_OPTS} -m --header='[kill:process:$SIGCODE]'" \
+	| awk '{print $2}')
 
 if [[ -n $pid ]]; then
-  echo $pid | xargs kill -${1:-15}
+  echo $pid | xargs kill $SIGCODE
   kp
 fi
 

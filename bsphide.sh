@@ -8,6 +8,6 @@ if pgrep "polybar"; then
 fi
 
 for node in $NODES; do
-  bspc node $node -g hidden=on
+  bspc node "$node" -g hidden=on
 done
 

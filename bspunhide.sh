@@ -15,5 +15,5 @@ for node in $NODES; do
 done
 
 # hide sticky terminal back
-bspc node $QUICKTERM -g hidden=on
+bspc node "$QUICKTERM" -g hidden=on
 

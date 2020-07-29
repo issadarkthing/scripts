@@ -18,8 +18,8 @@ INIT=${WORD:0:1}
 DATA=/usr/share/dict/englist-dict/"$INIT".json
 
 # extract json data
-DEFS=$(jq ".$WORD.meanings[] | .def" "$DATA" 2>/dev/null)
-EXAMPLES=$(jq ".$WORD.meanings[] | .examples" "$DATA" 2>/dev/null)
+DEFS=$(jq ".[\"$WORD\"].meanings[] | .def" "$DATA" 2>/dev/null)
+EXAMPLES=$(jq ".[\"$WORD\"].meanings[] | .examples" "$DATA" 2>/dev/null)
 
 # convert to array
 readarray -t DEFS <<< "$DEFS"
