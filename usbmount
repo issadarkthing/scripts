@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+lsblk
+echo
+read -p 'Which block device to mount: ' block
+udisksctl mount -b /dev/$block
+

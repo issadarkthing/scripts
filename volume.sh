@@ -6,15 +6,12 @@ icon=/usr/share/icons/Paper/24x24/status/stock_volume-max.png
 
 changevolume() {
 
-	MSG=$(amixer -D pulse sset Master 5%$1 \
+	VOLUME=$(amixer -D pulse sset Master 5%$1 \
 		    | tail -n 1 \
-			 | grep -o "[0-9]\+" \
-			 | tail -n 1)
-	PROGRESSBAR=$(getprogstr 20 "█" "░" "$MSG")
-	VOLUME="Volume: $MSG% $PROGRESSBAR"
-	notify-send "Master volume" "$VOLUME" \
-	-i $icon -u low \
-	-h string:x-canonical-private-synchronous:anything
+			| grep -o "[0-9]\+" \
+			| tail -n 1)
+
+	echo $VOLUME > /tmp/xobpipe
 	play -q /usr/share/sounds/Yaru/stereo/audio-volume-change.oga 2> /dev/null
 }
 
@@ -37,7 +34,7 @@ else
 		    | tail -n 1 \
 			 | grep -o "[0-9]\+" \
 			 | tail -n 1)
-	PROGRESSBAR=$(getprogstr \
+	PROGRESSBAR=$(~/Documents/scripts/getprogstr \
 		20 "-" "-" $CURRENTVOLUME "/")
 	echo $CURRENTVOLUME $PROGRESSBAR
 fi

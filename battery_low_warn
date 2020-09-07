@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+HASBEENWARNED=false
+BATT_THRESHOLD=20
+
+while :;do
+
+	BAT_PERCENTAGE=$(upower -i /org/freedesktop/UPower/devices/battery_BAT1 \
+		| awk '/percentage/ {gsub(/%/, ""); print $2}')
+
+	if [[ $BAT_PERCENTAGE -le $BATT_THRESHOLD ]] && [[ $HASBEENWARNED = false ]]; then
+		notify-send -u "critical" "Battery Low Warning"
+		HASBEENWARNED=true
+	elif [[ $BAT_PERCENTAGE -gt $BAT_PERCENTAGE ]] && [[ $HASBEENWARNED = true ]]; then
+		HASBEENWARNED=false
+	fi
+
+	sleep 30
+
+done

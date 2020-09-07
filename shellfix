@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+
+for file in "$@"; do
+	if DIFF=$(shellcheck -f diff "$file"); then 
+		git apply <<< "$DIFF" 
+	else 
+		shellcheck "$file" 
+	fi
+done

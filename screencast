@@ -2,4 +2,4 @@
 
 [[ -z $1 ]] && echo "please specify output file 'name.mkv'" && exit 1
 
-ffmpeg -y -f x11grab -s 1920x1080 -i $DISPLAY `pwd`/"$1"
+ffmpeg -y -framerate 24 -probesize 42M -f x11grab -s 1920x1080 -i $DISPLAY $(pwd)/"$1"

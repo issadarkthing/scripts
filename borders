@@ -1,0 +1,39 @@
+#!/bin/bash
+#
+#   double borders
+#
+
+outer='0x0a0f14'   # outer
+inner1='0x005779'  # focused
+inner2='0x434366'  # normal
+
+filter() {
+	local result=""
+	for v in "$1"; do
+		[[ $(wname $v) == "kitty" ]] && result="$result $v"
+	done
+	echo "$result"
+}
+
+targets() {
+	case $1 in
+		focused) output=$(bspc query -N -n .local.focused.\!fullscreen);;
+		normal)  output=$(bspc query -N -n .local.\!focused.\!fullscreen);;
+	esac
+
+	filter "$output"
+}
+
+
+draw() { 
+	bspc config border_width 12
+	chwb2 -I "$inner" -O "$outer" -i "4" -o "9" $* |:
+}
+
+# initial draw, and then subscribe to events
+{ echo; bspc subscribe node_geometry node_focus; } |
+	while read -r _; do
+
+		inner=$inner1 draw "$(targets focused)"
+		inner=$inner2 draw "$(targets  normal)"
+	done

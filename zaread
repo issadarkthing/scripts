@@ -1,18 +1,15 @@
 #!/bin/bash
 
 # default variables
-zadir=~/.local/share/zaread/
-reader="zathura"
+ZADIR=~/.local/share/zaread/
+READER="zathura"
 
 
 # if ~/.zaread doesn't exist, we create it.
-if [[ ! -d "$zadir" ]]; then
-  mkdir "$zadir"
-  mkdir "$zadir"cksum
-fi
+[[ ! -d "$ZADIR" ]] && mkdir -p "$ZADIR"cksum
 
 # if no arguments exit.
-if [[ -z $@ ]]; then exit 1; fi
+[[ ${#@} -eq 0 ]] && exit 1
 
 
 for i in "$@"; do
@@ -20,22 +17,22 @@ for i in "$@"; do
 	file=$(basename "$i")
 
 	# if file type is pdf, then just read the file
-	if [[ `file --mime-type "$file" | awk -F':' '{print $2}'` =~ pdf$  ]]; then
+	if [[ $(file --mime-type "$file" | awk -F':' '{print $2}') =~ pdf$  ]]; then
 	  echo "The file is already in PDF format."
-	  $reader --fork "$file"
+	  $READER --fork "$file"
 	# else check if you already have its pdf version (if not, create it)
 	else
 	  pdffile=${file%.*}".pdf"
-	  check=`cksum "$file" | awk '{print $1}'`
+	  check=$(cksum "$file" | awk '{print $1}')
 	  # if pdf version hasn't ever been created, or it changed, then
 	  # make conversion and store the checksum.
-	  if [[ ( ! -f "$zadir$pdffile" ) || ( ! "$check" == `cat "$zadir"cksum/"$file".check` ) ]]; then
+	  if [[ ( ! -f "$ZADIR$pdffile" ) || ( ! "$check" == $(cat "$ZADIR"cksum/"$file".check) ) ]]; then
 
-		libreoffice --convert-to pdf "$file" --headless --outdir "$zadir"
+		libreoffice --convert-to pdf "$file" --headless --outdir "$ZADIR"
 
-		echo "$check" > "$zadir"cksum/"$file".check
+		echo "$check" > "$ZADIR"cksum/"$file".check
 	  fi
-	  $reader --fork "$zadir$pdffile"
+	  $READER --fork "$ZADIR$pdffile"
 	fi
 done
 

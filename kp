@@ -16,6 +16,6 @@ pid=$(ps -ef \
 
 if [[ -n $pid ]]; then
   echo $pid | xargs kill $SIGCODE
-  kp
+  $0
 fi
 

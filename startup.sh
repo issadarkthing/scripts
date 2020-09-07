@@ -2,13 +2,6 @@
 
 
 if [ ! -f /tmp/autostart ]; then
-	bspc rule -a discord desktop="^4"
-	discord & 2>&1 /dev/null
-	echo discord >> /tmp/autostart
-
-	bspc rule -a Firefox --one-shot desktop="^1"
-	firefox &
-	echo firefox >> /tmp/autostart
 
 	bspc rule -a Thunderbird --one-shot desktop="^5"
 	thunderbird &
@@ -16,18 +9,22 @@ if [ ! -f /tmp/autostart ]; then
 
 	# setup for scratchpad terminal
 	bspc rule -a Alacritty --one-shot sticky=on state=floating hidden=on
-	alacritty --class Alacritty &
+	alacritty --title quick-term &
 	echo alacritty >> /tmp/autostart
 
 	# conky
-	conky -d &> /tmp/conky.log
-	echo conky >> /tmp/autostart
+	# conky -d &> /tmp/conky.log
+	# echo conky >> /tmp/autostart
 
 	# skippy-xd
-	skippy-xd --start-daemon &
-	echo skippy-xd >> /tmp/autostart
+	# skippy-xd --start-daemon &
+	# echo skippy-xd >> /tmp/autostart
 
 	# handle unstable connection
 	#~/Documents/scripts/reload.sh & 2>&1 /dev/null
+
+	# create xob bar
+	mkfifo /tmp/xobpipe
+	tail -f /tmp/xobpipe | xob -t 4000 &
 
 fi

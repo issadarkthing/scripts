@@ -6,14 +6,19 @@
 
 if [ -z "$1" ]; then
 	echo 'usage: getProgressString 10 "#" "-" 50 "|"'
-	exit 1
 fi
 
+# The total number of items(the width of the bar)
+ITEMS="$1" 
 
-ITEMS="$1" # The total number of items(the width of the bar)
-FILLED_ITEM="$2" # The look of a filled item
-NOT_FILLED_ITEM="$3" # The look of a not filled item
-STATUS="$4" # The current progress status in percent
+# The look of a filled item
+FILLED_ITEM="$2" 
+
+# The look of a not filled item
+NOT_FILLED_ITEM="$3" 
+
+# The current progress status in percent
+STATUS="$4" 
 DELIMETER="$5"
 
 # calculate how many items need to be filled and not filled

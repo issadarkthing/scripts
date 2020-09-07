@@ -1,10 +1,10 @@
 #!/bin/bash
 
-MON="eDP-1"    # Discover monitor name with: xrandr | grep " connected"
+MON="eDP1"    # Discover monitor name with: xrandr | grep " connected"
 STEP=5          # Step Up/Down brightnes by: 5 = ".05", 10 = ".10", etc.
 
 
-CurrBright=$( xrandr --verbose --current | grep ^"$MON" -A5 | tail -n1 )
+CurrBright=$(xrandr --verbose --current | grep ^"$MON" -A5 | tail -n1)
 CurrBright="${CurrBright##* }"  # Get brightness level with decimal place
 
 Left=${CurrBright%%"."*}        # Extract left of decimal point
@@ -14,12 +14,9 @@ Right=${CurrBright#*"."}        # Extract right of decimal point
 trigger() {
 
 	local ROUNDED=$(python3 -c "print(int($1 * 100))")
-	local BRIGHT=$(getprogstr 20 "█" "░" "$ROUNDED")
 
-	notify-send -u low \
-		-i /usr/share/icons/Paper/24x24/apps/preferences-system-brightness-lock.png \
-		-h string:x-canonical-private-synchronous:anything \
-		"System Brightness" "Brightness: $ROUNDED $BRIGHT";
+	echo $ROUNDED > /tmp/xobpipe
+
 	play -q /usr/share/sounds/Yaru/stereo/audio-volume-change.oga 2> /dev/null
 
 }
@@ -64,5 +61,5 @@ if (( $(echo "$initialBrightness != $finalBrightness" | bc -l) )); then
 fi
 
 ROUNDED=$(python3 -c "print(int($finalBrightness * 100))")
-BRIGHT=$(getprogstr 20 "-" "-" "$ROUNDED" "/")
+BRIGHT=$(~/Documents/scripts/getprogstr 20 "-" "-" "$ROUNDED" "/")
 echo "$ROUNDED" "$BRIGHT"

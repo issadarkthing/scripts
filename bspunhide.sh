@@ -3,7 +3,7 @@
 # Simple script to unhide all he nodes on a desktop
 
 NODES=$(bspc query -N -n .hidden -d focused)
-QUICKTERM=$(xdotool search --class Alacritty)
+QUICKTERM=$(xdotool search --name quick-term)
 
 # Show bar if it's running
 if pgrep "polybar"; then
