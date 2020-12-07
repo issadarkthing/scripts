@@ -1,51 +1,66 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 URL_PATH=~/Documents/scripts/bookmark/urls
 BOOKMARK_HISTORY=~/Documents/scripts/bookmark/bookmark_history
 ICON=/usr/share/icons/Paper/24x24/apps/accessories-ebook-reader.png
 
 # open url using dmenu
-if [ -z "$1" ]; then
+if [[ -z $1 ]]; then
 
-	URL=$(dmenu -l 10 -c < $URL_PATH)
-	[ -n "$URL" ] && echo "$URL" >> "$BOOKMARK_HISTORY" && firefox -new-tab "$URL"
+	URL=$(dmenu -i -l 10 -c < $URL_PATH)
+
+	# return if no url
+	if [[ -n "$URL" ]]; then
+		echo "$URL" >> "$BOOKMARK_HISTORY"
+
+		# open in student container for google classroom
+		if [[ $URL == *"classroom"* ]]; then
+			firefox-container -n Student "$URL"
+		else
+			firefox -new-tab "$URL"
+		fi
+	fi
+	
 
 # add bookmark
-elif [ "$1" == "-a" ]; then
+elif [[ $1 == "-a" ]]; then
 
 	shift
 
-	for url in "$@"; do
+	for URL in "$@"; do
+
 		EXISTS=false
-
 		# check if link exists
-		while read -r link; do
-			[ "$link" = "$url" ] && EXISTS=true
-		done < $URL_PATH
+		grep "^$URL$" "$URL_PATH" && EXISTS=true
 
-		[ "$EXISTS" = true ] && echo "$url already added!"
-		[ "$EXISTS" = false ] && echo "$url" >> $URL_PATH && echo "$1 added!"
+		[[ $EXISTS == true ]] && echo "$URL already added!"
+		[[ $EXISTS == false ]] && echo "$URL" >> $URL_PATH && echo "$1 added!"
 	done
 
 # add bookmark using dmenu
-elif [ "$1" == "-p" ]; then
+elif [[ $1 == "-p" ]]; then
 
 	URL=$(dmenu -F -l 1 -p "url" -c < $URL_PATH)
 
 	EXISTS=false
 
 	# check if link exists
-	while read -r link; do
-		[ "$link" = "$URL" ] && EXISTS=true
-	done < $URL_PATH
+	grep "^$URL$" "$URL_PATH" && EXISTS=true
 
-	[ "$EXISTS" = true ] && notify-send -i "$ICON" "URL already exists" "Provided link will not be added"
-	[ -n "$URL" ] && [ "$EXISTS" = false ] && echo "$URL" >> $URL_PATH && notify-send -i "$ICON" "URL added" "$URL"
+	[[ $EXISTS = true ]] && notify-send -i "$ICON" "URL already exists" "Provided link will not be added"
+	[[ -n $URL ]] && [[ $EXISTS == false ]] && echo "$URL" >> $URL_PATH && notify-send -i "$ICON" "URL added" "$URL"
 
 
-else
+elif [[ $1 == "-h" ]]; then
 
-	echo -e "-a to add bookmark\
-		\nno argument for dmenu"
+	cat <<- EOF
+		Simple url launcher.
+		usage: 
+		    bookmark [-p|-a URL]
+
+		options:
+		    -p add bookmark using dmenu
+		    -a add bookmark from command line
+	EOF
 
 fi

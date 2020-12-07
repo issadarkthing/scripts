@@ -1,27 +1,40 @@
-#!/usr/bin/python3
-import hashlib
-import sys
-import requests
-import getpass
+#!/usr/bin/env bb
 
-passw = getpass.getpass('Password: ')
-hashed_passw = hashlib.sha1(passw.encode()).hexdigest().upper()
+(defn get-input [prompt]
+  (let [console (System/console)]
+    (->>
+      (into-array [prompt])
+      (.readPassword console "%s")
+      (apply str))))
 
-response = requests.get("https://api.pwnedpasswords.com/range/" + hashed_passw[:5])
+(defn sha-1 [^String s] 
+  (->>
+    (.getBytes s)
+    (.digest (java.security.MessageDigest/getInstance "SHA"))
+    (map #(format "%02X" %))
+    (apply str)))
 
-list_passw = response.content.decode("utf-8").splitlines()
-founded = False
+(defn find-in [pred coll]
+  (if-not coll
+    nil
+    (let [x (first coll)]
+      (if (pred x)
+        x
+        (recur pred (next coll))))))
 
-for i in list_passw:
-
-    hashed_passw_respond, occurences = tuple(i.split(":"))
-
-
-    if hashed_passw_respond == hashed_passw[5:]:
-        print(f"password has been found {occurences} time(s)")
-        founded = True
-        break
+(defn get-pwned [passw]
+  (let [[prefix remain] (map #(apply str %) (split-at 5 (sha-1 passw)))]
+   (->>
+     (shell/sh "curl" "-Ss" (str "https://api.pwnedpasswords.com/range/" prefix))
+     (:out)
+     (str/split-lines)
+     (find-in #(str/includes? % remain)))))
 
 
-if not founded:
-    print("password has not been found yet")
+(defn pwned [passw]
+  (second (str/split (get-pwned passw) #":")))
+
+
+(let [input (get-input "Password: ")
+      result (pwned input)]
+  (println (str "password has been found " result " time(s)")))

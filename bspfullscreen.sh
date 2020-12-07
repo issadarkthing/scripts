@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# check if focused workspace is fullscreen
 if [ -z "$(bspc query -N -n .focused.fullscreen -d focused)" ]; then
 	bspc node focused.tiled -t fullscreen
 	~/Documents/scripts/bsphide.sh

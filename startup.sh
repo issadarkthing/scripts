@@ -12,6 +12,13 @@ if [ ! -f /tmp/autostart ]; then
 	alacritty --title quick-term &
 	echo alacritty >> /tmp/autostart
 
+	discord >/dev/null &
+	echo discord >> /tmp/autostart
+
+	bspc rule -a firefox --one-shot desktop="^1"
+	firefox >/dev/null &
+	echo firefox >> /tmp/autostart
+
 	# conky
 	# conky -d &> /tmp/conky.log
 	# echo conky >> /tmp/autostart
@@ -26,5 +33,10 @@ if [ ! -f /tmp/autostart ]; then
 	# create xob bar
 	mkfifo /tmp/xobpipe
 	tail -f /tmp/xobpipe | xob -t 4000 &
-
+	
+	# background image
+	feh --bg-scale ~/Pictures/watchdog.png &
+	
+	# transparency
+	picom -b
 fi

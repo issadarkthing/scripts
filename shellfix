@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-
+# tries to fix and apply changes where it seems fit
 for file in "$@"; do
 	if DIFF=$(shellcheck -f diff "$file"); then 
 		git apply <<< "$DIFF" 

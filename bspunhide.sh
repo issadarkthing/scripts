@@ -10,6 +10,7 @@ if pgrep "polybar"; then
   polybar-msg cmd show
 fi
 
+# unhide other windows
 for node in $NODES; do
 	bspc node $node -g hidden=off
 done

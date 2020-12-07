@@ -3,7 +3,7 @@
 PASSWD_LIST=$(find ~/.password-store -name "*.gpg" \
 	| sed "s|/home/terra/.password-store/||; s/.gpg$//g")
 ICON=/usr/share/icons/matefaenza/apps/24/cryptkeeper.png
-PASSWD=$(echo "$PASSWD_LIST" | dmenu -c -l 10)
+PASSWD=$(echo "$PASSWD_LIST" | dmenu -l 10)
 
 
 if [ -n "$PASSWD" ]; then

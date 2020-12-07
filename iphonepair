@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+VLC_PATH=~/Documents/vlc
+
+sudo usbmuxd
+idevicepair pair
+
+if $(ifuse --documents org.videolan.vlc-ios "$VLC_PATH"); then
+	echo "successfully mounted to $VLC_PATH"
+fi
