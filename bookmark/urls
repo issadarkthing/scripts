@@ -1,3 +1,10 @@
+# bookmark urls
+# use '#' to comment things out
+# use ' => ' to give a title. Title has higher priority when searched and
+# gives brief description what the url is for
+# blank lines are ignored
+
+
 https://www.youtube.com/
 https://github.com/issadarkthing
 https://www.reddit.com/
@@ -5,9 +12,9 @@ https://simsweb.uitm.edu.my/SPORTAL_APP/SPORTAL_LOGIN/index.htm
 https://www.paypal.com/my/signin
 https://dashboard.heroku.com/apps
 https://discordapp.com/developers/applications
-https://web.whatsapp.com/
+whatsapp => https://web.whatsapp.com/
 https://emojipedia.org/
-https://nyaa.si/
+torrent site => https://nyaa.si/
 https://animeheaven.ru/animeheaven.eu
 https://account.mongodb.com/account/login
 https://discord.js.org/#/
@@ -24,7 +31,7 @@ https://fontawesome.com/cheatsheet?from=io
 https://discordapp.com/developers/applications/603974948335124491/information
 https://www.mankier.com/
 https://github.com/davatorium/rofi
-https://wallhaven.cc/
+wallpaper => https://wallhaven.cc/
 https://github.com/gokcehan/lf
 https://github.com/dunst-project/dunst
 https://meet.google.com/_meet?pli=1&authuser=1
@@ -32,7 +39,7 @@ https://classroom.google.com/u/0/h
 https://pkg.go.dev/github.com/gokcehan/lf?tab=doc
 https://github.com/ranger/ranger
 https://mega.nz/fm/account
-https://askubuntu.com/questions/139786/how-to-recover-a-usb-stick-after-ubuntu-installation
+recover usb stick => https://askubuntu.com/questions/139786/how-to-recover-a-usb-stick-after-ubuntu-installation
 https://imagecolorpicker.com/
 http://learnyouahaskell.com/chapters
 https://www.fprintf.net/vimCheatSheet.html
@@ -53,14 +60,15 @@ https://pastebin.com/
 https://github.com/mpv-player/mpv
 https://github.com/chjj/blessed
 https://nodejs.dev/the-nodejs-http-module
-https://melpa.org/
-https://docs.google.com/document/u/0/
+emacs packages => https://melpa.org/
+google doc => https://docs.google.com/document/u/0/
 https://top.gg/
 https://www.fantasynamegenerators.com/monster-names.php
 https://github.com/neoclide/coc.nvim/wiki/Using-coc-extensions
-https://simianwesthighlandterrier.htmlpasta.com/
 https://userstyles.org/
 https://github.com/rivo/tview
 https://github.com/faiface/beep
 https://www.office.com/launch/word?ui=en-US&rs=US&auth=2
-http://localhost:631/
+cups => http://localhost:631/
+what I wish I knew learning haskell => http://dev.stephendiehl.com/hask/
+https://adventofcode.com/

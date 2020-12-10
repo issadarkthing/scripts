@@ -4,13 +4,20 @@ URL_PATH=~/Documents/scripts/bookmark/urls
 BOOKMARK_HISTORY=~/Documents/scripts/bookmark/bookmark_history
 ICON=/usr/share/icons/Paper/24x24/apps/accessories-ebook-reader.png
 
+
 # open url using dmenu
 if [[ -z $1 ]]; then
 
-	URL=$(dmenu -i -l 10 -c < $URL_PATH)
+	# filters comment and blank lines and add into dmenu
+	URL=$(dmenu -i -l 10 -c < <(awk '!/^#/ && !/^$/ {print}' $URL_PATH))
 
 	# return if no url
-	if [[ -n "$URL" ]]; then
+	if [[ -n $URL ]]; then
+
+		if [[ $URL == *" => "* ]]; then
+			URL=$(awk -F' => ' '{print $2}' <<< "$URL")
+		fi
+
 		echo "$URL" >> "$BOOKMARK_HISTORY"
 
 		# open in student container for google classroom
