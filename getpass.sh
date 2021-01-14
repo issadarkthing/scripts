@@ -18,5 +18,4 @@ if [ -n "$PASSWD" ]; then
 		echo " " | xclip -sel clip
 		notify-send	-i "$ICON" "timed out" "clipboard cleared"
 	fi
-
 fi

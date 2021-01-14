@@ -4,30 +4,44 @@ URL_PATH=~/Documents/scripts/bookmark/urls
 BOOKMARK_HISTORY=~/Documents/scripts/bookmark/bookmark_history
 ICON=/usr/share/icons/Paper/24x24/apps/accessories-ebook-reader.png
 
+function uriencode() {
+	jq -nr --arg v "$1" '$v|@uri'
+}
 
-# open url using dmenu
+# open url using dmenu if no argument given
 if [[ -z $1 ]]; then
 
 	# filters comment and blank lines and add into dmenu
 	URL=$(dmenu -i -l 10 -c < <(awk '!/^#/ && !/^$/ {print}' $URL_PATH))
 
+	# dmenu exit code; returns non-zero when selected item is not in the list
+	FOUND=$(echo $?)
+
 	# return if no url
 	if [[ -n $URL ]]; then
 
+		# remove title
 		if [[ $URL == *" => "* ]]; then
 			URL=$(awk -F' => ' '{print $2}' <<< "$URL")
 		fi
 
 		echo "$URL" >> "$BOOKMARK_HISTORY"
 
-		# open in student container for google classroom
-		if [[ $URL == *"classroom"* ]]; then
-			firefox-container -n Student "$URL"
-		else
-			firefox -new-tab "$URL"
+		# get container
+		if [[ $URL == *" =>> "* ]]; then
+			CONTAINER=$(awk -F' =>> ' '{print $2}' <<< "$URL")
 		fi
+
+		if [[ -n $CONTAINER ]]; then
+			firefox-container -n "$CONTAINER" "$URL"
+
+		elif [[ $FOUND -ne 0 ]]; then
+			firefox --new-tab "https://duckduckgo.com/?q=$(uriencode "$URL")"
+		else
+			firefox --new-tab "$URL"
+		fi
+
 	fi
-	
 
 # add bookmark
 elif [[ $1 == "-a" ]]; then

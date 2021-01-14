@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+[ -z "$1" ] && echo "requires word" && exit 1
+
+curl -s "https://www.thesaurus.com/browse/$1" \
+	| pup '#meanings li text{}' \
+	| awk 'NF > 0'

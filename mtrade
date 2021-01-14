@@ -1,0 +1,65 @@
+#!/bin/bash
+
+VERBOSE=false
+DELAY=15
+TMP_DIR=/tmp/mtrade/
+
+while getopts ":Vd:" options; do
+	case "$options" in
+		V) VERBOSE=true;;
+		d) DELAY="$OPTARG"; shift;;
+		*) echo "unknown option -${OPTARG}" && exit 1;;
+	esac
+	shift
+done
+
+if [ -z "$1" ]; then
+	echo "Please provide url"
+	exit 1
+fi
+
+URL="${1%/*}"
+DATA_FILE="${TMP_DIR}${URL##*/}"
+
+[ ! -d $TMP_DIR ] && mkdir /tmp/mtrade
+
+plot_graph() {
+	gnuplot <(cat <<-EOF
+	
+	set title "${URL}" noenhanced
+	plot "${DATA_FILE}" with linespoints pointtype 7
+	while(1) {
+		replot
+		pause $DELAY
+	}
+
+	EOF
+	)	
+}
+
+FIRST=true
+
+while true; do
+
+	post=$(curl -sA 'random-agent' "$URL.json" | jq '.[0].data.children[0].data')
+	score=$(echo "$post" | jq '.score')
+	created_utc=$(echo "$post" | jq '.created_utc')
+	curr_sec=$(date +"%s")
+	age=$((( curr_sec - created_utc )))
+	value=$(python -c "print(${score}/${age})")
+
+	echo "$age $value" >> "$DATA_FILE"
+
+	if [ "$FIRST" == "true" ]; then
+		FIRST=false
+		if [ "$VERBOSE" == false ]; then 
+			plot_graph >& /dev/null &
+		else
+			plot_graph &
+		fi
+	fi
+	sleep "$DELAY"
+
+done
+
+
