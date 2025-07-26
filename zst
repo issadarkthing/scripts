@@ -1,0 +1,13 @@
+#!/usr/bin/zsh
+# zsh tracker (zst) is a script to track all opened zsh and their current
+# directory and workspace. You need to include this in your ~/.zsh
+#
+# chpwd() {
+#     mkdir -p /tmp/zst
+#     WORKSPACE=$(wmctrl -d | awk '$2=="*"{print $9}')
+#     echo "$WORKSPACE $PWD" > /tmp/zst/$$
+# }
+#
+# chpwd
+
+ps aux | grep '/usr/bin/zsh$' | awk '{print $2}' | xargs -I % cat /tmp/zst/%
