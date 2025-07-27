@@ -1,0 +1,3 @@
+#!/usr/bin/env zsh
+
+zst | fzf | awk '{print $1}' | (read number; let number--; echo $number) | xargs wmctrl -s
