@@ -1,3 +1,14 @@
+#!/usr/bin/env bash
+
+CONTAINER_NAME="anythingllm"
+
+# Check if a container with this name is already running
+if [ -n "$(docker ps | grep $CONTAINER_NAME)" ]; then
+  echo "AnythingLLM is already running."
+  exit 0
+fi
+
+echo "Starting AnythingLLM..."
 export STORAGE_LOCATION=$HOME/anythingllm
 docker run -d -p 3001:3001 \
     --cap-add SYS_ADMIN \
