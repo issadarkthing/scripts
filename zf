@@ -1,3 +1,7 @@
 #!/usr/bin/env zsh
+#
+# This script allows you to switch between workspaces using fzf. This script is
+# used in conjunction with wmctrl to manage workspaces in a window manager like i3 or Openbox.
+# Ensure zst script is installed and wmctrl is available on your system.
 
 zst | fzf | awk '{print $1}' | (read number; let number--; echo $number) | xargs wmctrl -s
